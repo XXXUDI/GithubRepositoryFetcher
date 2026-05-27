@@ -14,13 +14,16 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.socompany.githubrepofetcher.model.GithubRepository;
+import com.socompany.githubrepofetcher.model.GithubBranch;
+import com.socompany.githubrepofetcher.model.dto.BranchDto;
 import com.socompany.githubrepofetcher.mapper.GithubRepositoryDtoMapper;
 
 @Service
 @Slf4j
 public class GitHubRepositoryFetcherService {
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper()
+            .configure(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     private final GithubRepositoryDtoMapper mapper;
     private HttpClient httpClient;
 
@@ -43,9 +46,30 @@ public class GitHubRepositoryFetcherService {
         List<GithubRepository> repos = objectMapper.readValue(response.body(), new TypeReference<List<GithubRepository>>() {});
         List<GithubRepositoryDto> dtoList = repos.stream()
                 .filter(repo -> !repo.isFork())
-                .map(mapper::map)
+                .map(this::fetchAndMapRepository)
                 .collect(Collectors.toList());
 
         return dtoList;
+    }
+
+    private GithubRepositoryDto fetchAndMapRepository(GithubRepository repo) {
+        List<BranchDto> branchDtos = null;
+        try {
+            var branchResponse = httpClient.send(HttpRequest.newBuilder()
+                    .method("GET", HttpRequest.BodyPublishers.noBody())
+                    .uri(java.net.URI.create("https://api.github.com/repos/" + repo.getOwner().getLogin() + "/" + repo.getName() + "/branches"))
+                    .build(), HttpResponse.BodyHandlers.ofString());
+
+            if (branchResponse.statusCode() == 200) {
+                List<GithubBranch> branches = objectMapper.readValue(branchResponse.body(), new TypeReference<>() {});
+                branchDtos = branches.stream()
+                        .map(b -> new BranchDto(b.getName(), b.getCommit().getSha()))
+                        .collect(Collectors.toList());
+            }
+        } catch (Exception e) {
+            log.error("Failed to fetch branches for {}", repo.getName(), e);
+        }
+
+        return new GithubRepositoryDto(repo.getName(), repo.getOwner().getLogin(), branchDtos);
     }
 }
