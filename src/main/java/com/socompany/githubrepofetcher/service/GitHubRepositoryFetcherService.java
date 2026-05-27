@@ -15,7 +15,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.socompany.githubrepofetcher.model.GithubRepository;
 import com.socompany.githubrepofetcher.model.GithubBranch;
 import com.socompany.githubrepofetcher.model.dto.BranchDto;
-import com.socompany.githubrepofetcher.mapper.GithubRepositoryDtoMapper;
 import com.socompany.githubrepofetcher.exception.UserNotFoundException;
 
 @Service
@@ -24,12 +23,7 @@ public class GitHubRepositoryFetcherService {
 
     private final ObjectMapper objectMapper = new ObjectMapper()
             .configure(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    private final GithubRepositoryDtoMapper mapper;
     private HttpClient httpClient;
-
-    public GitHubRepositoryFetcherService(GithubRepositoryDtoMapper mapper) {
-        this.mapper = mapper;
-    }
 
     public List<GithubRepositoryDto> getRepositories(String user) throws IOException, InterruptedException {
         httpClient = HttpClient.newHttpClient();
@@ -44,12 +38,11 @@ public class GitHubRepositoryFetcherService {
         }
 
         List<GithubRepository> repos = objectMapper.readValue(response.body(), new TypeReference<List<GithubRepository>>() {});
-        List<GithubRepositoryDto> dtoList = repos.stream()
+
+        return repos.stream()
                 .filter(repo -> !repo.isFork())
                 .map(this::fetchAndMapRepository)
                 .collect(Collectors.toList());
-
-        return dtoList;
     }
 
     private GithubRepositoryDto fetchAndMapRepository(GithubRepository repo) {
