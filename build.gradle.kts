@@ -21,9 +21,9 @@ repositories {
 dependencies {
 
     // Source: https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
-    implementation("com.fasterxml.jackson.core:jackson-core:2.21.3")
+    implementation("com.fasterxml.jackson.core:jackson-core")
     // Source: https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
-    implementation("com.fasterxml.jackson.core:jackson-databind:2.21.3")
+    implementation("com.fasterxml.jackson.core:jackson-databind")
     implementation("org.springframework.boot:spring-boot-starter-web")
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
