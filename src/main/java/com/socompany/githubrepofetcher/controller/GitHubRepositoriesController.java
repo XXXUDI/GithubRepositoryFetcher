@@ -13,14 +13,15 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 import java.util.List;
 
-@RequiredArgsConstructor // Lombok konstruktor dla DI
-@RequestMapping("/api/v1/repositories") // Podstawowy endpoint dla kontrolera
-@RestController // Traktujemy tą klasę jako kontroler REST
+@RequiredArgsConstructor // Lombok constructor
+@RequestMapping("/api/v1/repositories") // Basic endpoint path
+@RestController
 @Slf4j // Logger
 public class GitHubRepositoriesController {
 
     private final GitHubRepositoryFetcherService service;
 
+    // GET /api/v1/repositories/{user}
     @GetMapping("/{user}")
     public ResponseEntity<List<GithubRepositoryDto>> getRepositories(@PathVariable String user) throws IOException, InterruptedException {
         log.info("Received a request for user: {}", user);

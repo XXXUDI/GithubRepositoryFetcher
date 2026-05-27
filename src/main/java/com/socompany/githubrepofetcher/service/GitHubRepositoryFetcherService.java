@@ -27,18 +27,20 @@ public class GitHubRepositoryFetcherService {
 
     public List<GithubRepositoryDto> getRepositories(String user) throws IOException, InterruptedException {
         httpClient = HttpClient.newHttpClient();
+        log.debug("Sending request to GitHub API for user: {}", user);
         var response = httpClient.send(HttpRequest.newBuilder()
                 .method("GET", HttpRequest.BodyPublishers.noBody())
                 .uri(java.net.URI.create("https://api.github.com/users/" + user + "/repos"))
                 .build(), HttpResponse.BodyHandlers.ofString());
-        log.info("Response status: {}", response.statusCode());
+        log.info("Received response from GitHub API: {}", response.statusCode());
 
         if (response.statusCode() == 404) {
+            log.error("User not found: {}", user);
             throw new UserNotFoundException("User not found");
         }
-
+        log.debug("Trying to parse response body...");
         List<GithubRepository> repos = objectMapper.readValue(response.body(), new TypeReference<List<GithubRepository>>() {});
-
+        log.debug("Response body parsed successfully. Returning repositories...");
         return repos.stream()
                 .filter(repo -> !repo.isFork())
                 .map(this::fetchAndMapRepository)
@@ -62,7 +64,6 @@ public class GitHubRepositoryFetcherService {
         } catch (Exception e) {
             log.error("Failed to fetch branches for {}", repo.getName(), e);
         }
-
         return new GithubRepositoryDto(repo.getName(), repo.getOwner().getLogin(), branchDtos);
     }
 }
