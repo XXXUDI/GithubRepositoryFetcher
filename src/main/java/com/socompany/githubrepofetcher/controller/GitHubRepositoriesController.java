@@ -25,10 +25,6 @@ public class GitHubRepositoriesController {
     public ResponseEntity<List<GithubRepositoryDto>> getRepositories(@PathVariable String user) throws IOException, InterruptedException {
         log.info("Received a request for user: {}", user);
         var repositories = service.getRepositories(user);
-        if (repositories == null) {
-            return ResponseEntity.notFound().build();
-        } else {
-            return ResponseEntity.ok(repositories);
-        }
+        return ResponseEntity.ok(repositories);
     }
 }

@@ -17,6 +17,7 @@ import com.socompany.githubrepofetcher.model.GithubRepository;
 import com.socompany.githubrepofetcher.model.GithubBranch;
 import com.socompany.githubrepofetcher.model.dto.BranchDto;
 import com.socompany.githubrepofetcher.mapper.GithubRepositoryDtoMapper;
+import com.socompany.githubrepofetcher.exception.UserNotFoundException;
 
 @Service
 @Slf4j
@@ -40,7 +41,7 @@ public class GitHubRepositoryFetcherService {
         log.info("Response status: {}", response.statusCode());
 
         if (response.statusCode() == 404) {
-            return null;
+            throw new UserNotFoundException("User not found");
         }
 
         List<GithubRepository> repos = objectMapper.readValue(response.body(), new TypeReference<List<GithubRepository>>() {});
