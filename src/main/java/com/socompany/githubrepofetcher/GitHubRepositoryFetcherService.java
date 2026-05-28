@@ -1,5 +1,6 @@
 package com.socompany.githubrepofetcher;
 
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -20,12 +21,15 @@ public class GitHubRepositoryFetcherService {
             .configure(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     private HttpClient httpClient;
 
+    @Setter
+    private String baseUrl = "https://api.github.com";
+
     public List<GithubRepositoryDto> getRepositories(String user) throws IOException, InterruptedException {
         httpClient = HttpClient.newHttpClient();
         log.debug("Sending request to GitHub API for user: {}", user);
         var response = httpClient.send(HttpRequest.newBuilder()
                 .method("GET", HttpRequest.BodyPublishers.noBody())
-                .uri(java.net.URI.create("https://api.github.com/users/" + user + "/repos"))
+                .uri(java.net.URI.create(baseUrl + "/users/" + user + "/repos"))
                 .build(), HttpResponse.BodyHandlers.ofString());
         log.info("Received response from GitHub API: {}", response.statusCode());
 
@@ -47,7 +51,7 @@ public class GitHubRepositoryFetcherService {
         try {
             var branchResponse = httpClient.send(HttpRequest.newBuilder()
                     .method("GET", HttpRequest.BodyPublishers.noBody())
-                    .uri(java.net.URI.create("https://api.github.com/repos/" + repo.getOwner().getLogin() + "/" + repo.getName() + "/branches"))
+                    .uri(java.net.URI.create(baseUrl + "/repos/" + repo.getOwner().getLogin() + "/" + repo.getName() + "/branches"))
                     .build(), HttpResponse.BodyHandlers.ofString());
 
             if (branchResponse.statusCode() == 200) {
