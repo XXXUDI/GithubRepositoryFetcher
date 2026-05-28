@@ -1,7 +1,5 @@
-package com.socompany.githubrepofetcher.controller;
+package com.socompany.githubrepofetcher;
 
-import com.socompany.githubrepofetcher.model.dto.GithubRepositoryDto;
-import com.socompany.githubrepofetcher.service.GitHubRepositoryFetcherService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

@@ -1,6 +1,5 @@
-package com.socompany.githubrepofetcher.service;
+package com.socompany.githubrepofetcher;
 
-import com.socompany.githubrepofetcher.model.dto.GithubRepositoryDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -12,10 +11,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.socompany.githubrepofetcher.model.GithubRepository;
-import com.socompany.githubrepofetcher.model.GithubBranch;
-import com.socompany.githubrepofetcher.model.dto.BranchDto;
-import com.socompany.githubrepofetcher.exception.UserNotFoundException;
 
 @Service
 @Slf4j

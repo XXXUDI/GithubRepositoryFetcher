@@ -1,8 +1,8 @@
 package com.socompany.service;
 
-import com.socompany.githubrepofetcher.exception.UserNotFoundException;
-import com.socompany.githubrepofetcher.model.dto.GithubRepositoryDto;
-import com.socompany.githubrepofetcher.service.GitHubRepositoryFetcherService;
+import com.socompany.githubrepofetcher.UserNotFoundException;
+import com.socompany.githubrepofetcher.GithubRepositoryDto;
+import com.socompany.githubrepofetcher.GitHubRepositoryFetcherService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;

@@ -1,4 +1,4 @@
-package com.socompany.githubrepofetcher.model.dto;
+package com.socompany.githubrepofetcher;
 
 public record ErrorResponse(
         int status,

@@ -1,7 +1,5 @@
-package com.socompany.githubrepofetcher.controller;
+package com.socompany.githubrepofetcher;
 
-import com.socompany.githubrepofetcher.exception.UserNotFoundException;
-import com.socompany.githubrepofetcher.model.dto.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

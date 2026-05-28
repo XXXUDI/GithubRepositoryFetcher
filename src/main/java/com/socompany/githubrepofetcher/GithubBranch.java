@@ -1,4 +1,4 @@
-package com.socompany.githubrepofetcher.model;
+package com.socompany.githubrepofetcher;
 
 import lombok.Data;
 

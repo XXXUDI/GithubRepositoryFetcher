@@ -1,4 +1,4 @@
-package com.socompany.githubrepofetcher.model;
+package com.socompany.githubrepofetcher;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
